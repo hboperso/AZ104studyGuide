@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AZ-104 Ultimate Study Guide & Exam Simulator</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --navy-blue: #0A192F;
+            --sky-blue: #56a5eb;
+            --light-slate: #ccd6f6;
+            --slate: #8892b0;
+            --white: #e6f1ff;
+            --card-bg: rgba(10, 25, 47, 0.85);
+            --hover-bg: #112240;
+            --correct-green: #28a745;
+            --incorrect-red: #dc3545;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, var(--navy-blue), var(--sky-blue));
+            color: var(--light-slate);
+            line-height: 1.6;
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: auto;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        header h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--white);
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        header p {
+            font-size: 1.2rem;
+            color: var(--slate);
+        }
+
+        section {
+            background: var(--card-bg);
+            margin-bottom: 2rem;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px -15px rgba(2,12,27,0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        h2 {
+            color: var(--sky-blue);
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            border-bottom: 2px solid var(--sky-blue);
+            padding-bottom: 0.5rem;
+        }
+
+        /* Accordion for Study Path */
+        .accordion-item {
+            margin-bottom: 1rem;
+        }
+
+        .accordion-button {
+            width: 100%;
+            background: none;
+            border: 1px solid var(--slate);
+            color: var(--light-slate);
+            padding: 1rem;
+            font-size: 1.2rem;
+            font-weight: 600;
+            text-align: left;
+            cursor: pointer;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            border-radius: 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .accordion-button:hover {
+            background-color: var(--hover-bg);
+            color: var(--sky-blue);
+        }
+        
+        .accordion-button::after {
+            content: '+';
+            font-size: 1.8rem;
+            transition: transform 0.3s ease;
+        }
+
+        .accordion-button.active::after {
+            transform: rotate(45deg);
+        }
+
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease-out;
+            padding: 0 1rem;
+            border-left: 2px solid var(--sky-blue);
+            margin-left: 0.5rem;
+        }
+
+        .accordion-content ul {
+            list-style-type: none;
+            padding: 1rem 0;
+        }
+
+        .accordion-content ul li {
+            margin-bottom: 0.8rem;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+
+        .accordion-content ul li::before {
+            content: '»';
+            color: var(--sky-blue);
+            position: absolute;
+            left: 0;
+            font-weight: bold;
+        }
+
+        .accordion-content ul li b {
+            color: var(--light-slate);
+            font-weight: 600;
+        }
+        
+        /* Game Styles */
+        #game-section h2 {
+            text-align: center;
+        }
+
+        #game-controls {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .btn {
+            font-size: 1.5rem;
+            padding: 1rem 3rem;
+            cursor: pointer;
+            border-radius: 50px;
+            border: 2px solid var(--sky-blue);
+            background: transparent;
+            color: var(--sky-blue);
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn:hover {
+            background-color: var(--sky-blue);
+            color: var(--navy-blue);
+            box-shadow: 0 0 20px var(--sky-blue);
+        }
+        
+        #game {
+            display: none; /* Initially hidden */
+        }
+
+        #hud {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .hud-prefix {
+            font-size: 1rem;
+            color: var(--slate);
+        }
+
+        .hud-main-text {
+            font-size: 3rem;
+            color: var(--white);
+        }
+        
+        #question {
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 2rem;
+            text-align: center;
+            min-height: 80px;
+        }
+        
+        .choice-container {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+            border: 1px solid var(--slate);
+            border-radius: 5px;
+            background-color: var(--hover-bg);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .choice-container:hover {
+            cursor: pointer;
+            box-shadow: 0 0 15px rgba(86, 165, 235, 0.5);
+            transform: translateY(-2px);
+        }
+
+        .choice-prefix {
+            padding: 1rem 1.5rem;
+            background-color: var(--sky-blue);
+            color: var(--navy-blue);
+            font-weight: bold;
+            border-top-left-radius: 5px;
+            border-bottom-left-radius: 5px;
+        }
+
+        .choice-text {
+            padding: 1rem;
+            width: 100%;
+        }
+
+        .correct {
+            background: linear-gradient(90deg, var(--correct-green), var(--hover-bg));
+        }
+
+        .incorrect {
+            background: linear-gradient(90deg, var(--incorrect-red), var(--hover-bg));
+        }
+
+        #end-screen {
+            display: none; /* Initially hidden */
+            text-align: center;
+        }
+
+        #end-screen h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        #end-screen p {
+            font-size: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 3rem;
+            color: var(--slate);
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            body { padding: 1rem; }
+            header h1 { font-size: 2rem; }
+            h2 { font-size: 1.5rem; }
+            #hud { flex-direction: column; align-items: center; gap: 1rem; }
+            .btn { font-size: 1.2rem; padding: 0.8rem 2rem; }
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <h1>AZ-104 Ultimate Study Guide & Exam Simulator</h1>
+            <p>Your complete resource for passing the Microsoft Azure Administrator exam.</p>
+        </header>
+
+        <section id="study-path">
+            <h2>Exhaustive Study Path (Expanded)</h2>
+
+            <div class="accordion-item">
+                <button class="accordion-button">Module 1: Manage Azure Identities and Governance (15-20%)</button>
+                <div class="accordion-content">
+                   <ul>
+                        <li><b>Manage Microsoft Entra ID Objects:</b>
+                            <ul>
+                                <li>Create users and groups (assigned, dynamic user, dynamic device).</li>
+                                <li>Manage user and group properties, bulk user updates.</li>
+                                <li>Configure self-service password reset (SSPR).</li>
+                                <li>Manage device settings and join devices to Microsoft Entra ID.</li>
+                            </ul>
+                        </li>
+                        <li><b>Manage Access Control:</b>
+                            <ul>
+                                <li>Understand role-based access control (RBAC) scopes (management group, subscription, resource group, resource).</li>
+                                <li>Assign built-in RBAC roles (Owner, Contributor, Reader, User Access Administrator).</li>
+                                <li>Interpret role permissions and troubleshoot access issues.</li>
+                            </ul>
+                        </li>
+                        <li><b>Manage Azure Subscriptions and Governance:</b>
+                            <ul>
+                                <li>Configure management groups to organize subscriptions.</li>
+                                <li>Implement Azure Policy: assign built-in policies, interpret compliance results.</li>
+                                <li>Configure Resource Locks (CanNotDelete, ReadOnly) to prevent accidental deletion.</li>
+                                <li>Use Azure Cost Management + Billing for cost analysis and budgets.</li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="accordion-item">
+                <button class="accordion-button">Module 2: Implement and Manage Storage (15-20%)</button>
+                <div class="accordion-content">
+                   <ul>
+                        <li><b>Manage Storage Accounts:</b>
+                            <ul>
+                                <li>Create and configure storage accounts: account kind (StorageV2, BlobStorage), performance tiers (Standard, Premium).</li>
+                                <li>Configure network access: public endpoints, service endpoints, private endpoints.</li>
+                                <li>Implement redundancy options: LRS, ZRS, GRS, RA-GRS.</li>
+                            </ul>
+                        </li>
+                        <li><b>Manage Data in Azure Storage:</b>
+                            <ul>
+                                <li>Use Azure Storage Explorer to upload, download, and manage data.</li>
+                                <li>Configure Blob storage: access tiers (Hot, Cool, Archive), lifecycle management policies.</li>
+                                <li>Generate Shared Access Signatures (SAS tokens) for delegated access.</li>
+                            </ul>
+                        </li>
+                        <li><b>Manage Azure Files:</b>
+                            <ul>
+                                <li>Create and configure an Azure file share.</li>
+                                <li>Configure Azure File Sync: install agent, create sync group and cloud endpoint.</li>
+                                <li>Map an Azure file share to a Windows virtual machine.</li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="accordion-item">
+                <button class="accordion-button">Module 3: Deploy and Manage Azure Compute Resources (20-25%)</button>
+                <div class="accordion-content">
+                    <ul>
+                        <li><b>Automate VM Deployment:</b>
+                            <ul>
+                                <li>Deploy VMs using ARM templates, Azure portal, and CLI/PowerShell.</li>
+                                <li>Configure custom script extensions for post-deployment configuration.</li>
+                                <li>Understand Azure Image Builder and Shared Image Gallery.</li>
+                            </ul>
+                        </li>
+                        <li><b>Configure VMs:</b>
+                            <ul>
+                                <li>Configure VM networking: attach NICs, configure IP addresses.</li>
+                                <li>Add and configure data disks.</li>
+                                <li>Implement high availability: Availability Sets (fault/update domains) and Availability Zones.</li>
+                            </ul>
+                        </li>
+                        <li><b>Create and Configure Azure App Service:</b>
+                           <ul>
+                                <li>Create an App Service Plan: choose pricing tier (Free, Shared, Basic, etc.).</li>
+                                <li>Create and configure a web app.</li>
+                                <li>Implement deployment slots for blue-green/staging deployments.</li>
+                                <li>Configure custom domains and SSL bindings.</li>
+                           </ul>
+                        </li>
+                        <li><b>Create and Configure Containers:</b>
+                            <ul>
+                                <li>Deploy a container using Azure Container Instances (ACI).</li>
+                                <li>Understand the use case for Azure Kubernetes Service (AKS) as a managed container orchestrator.</li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="accordion-item">
+                <button class="accordion-button">Module 4: Implement and Manage Virtual Networking (20-25%)</button>
+                <div class="accordion-content">
+                    <ul>
+                        <li><b>Implement and Manage Virtual Networks:</b>
+                            <ul>
+                                <li>Create VNETs and subnets; configure IP address spaces.</li>
+                                <li>Configure VNet peering (local and global) to connect virtual networks.</li>
+                                <li>Configure private and public DNS zones.</li>
+                            </ul>
+                        </li>
+                        <li><b>Secure Access to Virtual Networks:</b>
+                            <ul>
+                                <li>Create and configure Network Security Groups (NSGs) and their rules.</li>
+                                <li>Differentiate NSGs from Azure Firewall.</li>
+                                <li>Implement Azure Bastion for secure management access.</li>
+                            </ul>
+                        </li>
+                        <li><b>Configure Load Balancing:</b>
+                            <ul>
+                                <li>Differentiate Azure Load Balancer (Layer 4) from Application Gateway (Layer 7).</li>
+                                <li>Configure a public or internal load balancer with a backend pool and health probe.</li>
+                                <li>Understand URL-based routing and SSL offloading with Application Gateway.</li>
+                            </ul>
+                        </li>
+                        <li><b>Monitor and Troubleshoot Virtual Networking:</b>
+                            <ul>
+                                <li>Use Network Watcher for diagnostics (IP Flow Verify, Next Hop).</li>
+                                <li>Monitor network health and view topology.</li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="accordion-item">
+                <button class="accordion-button">Module 5: Monitor and Maintain Azure Resources (10-15%)</button>
+                <div class="accordion-content">
+                    <ul>
+                        <li><b>Monitor Resources by Using Azure Monitor:</b>
+                            <ul>
+                                <li>Create metric alerts and configure action groups (e.g., email, SMS).</li>
+                                <li>Analyze logs using Log Analytics Kusto Query Language (KQL) basics.</li>
+                                <li>Visualize data with Azure Dashboards.</li>
+                            </ul>
+                        </li>
+                        <li><b>Implement Backup and Recovery:</b>
+                            <ul>
+                                <li>Create a Recovery Services vault.</li>
+                                <li>Configure Azure Backup policies for VMs and on-premises workloads.</li>
+                                <li>Perform VM backup and restore operations (file-level restore, full VM restore).</li>
+                                <li>Understand the use case for Azure Site Recovery for disaster recovery.</li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section id="game-section">
+            <div id="game-controls">
+                <button class="btn" id="start-btn">Start Exam Simulation</button>
+            </div>
+
+            <div id="game">
+                <div id="hud">
+                    <div id="hud-item">
+                        <p class="hud-prefix">Time Left</p>
+                        <h1 class="hud-main-text" id="timer">300</h1>
+                    </div>
+                     <div id="hud-item">
+                        <p class="hud-prefix">Question</p>
+                        <h1 class="hud-main-text" id="progress-text"></h1>
+                    </div>
+                    <div id="hud-item">
+                        <p class="hud-prefix">Score</p>
+                        <h1 class="hud-main-text" id="score">0</h1>
+                    </div>
+                </div>
+                <h2 id="question"></h2>
+                <div class="choice-container"><p class="choice-prefix">A</p><p class="choice-text" data-number="1"></p></div>
+                <div class="choice-container"><p class="choice-prefix">B</p><p class="choice-text" data-number="2"></p></div>
+                <div class="choice-container"><p class="choice-prefix">C</p><p class="choice-text" data-number="3"></p></div>
+                <div class="choice-container"><p class="choice-prefix">D</p><p class="choice-text" data-number="4"></p></div>
+            </div>
+
+            <div id="end-screen">
+                <h2>Quiz Finished!</h2>
+                <p>Your final score is: <span id="final-score"></span></p>
+                <button class="btn" id="restart-btn">Try Again</button>
+            </div>
+        </section>
+        
+        <footer>
+            <p>&copy; 2025 Gemini AI. Created to help you ace the AZ-104 Exam.</p>
+        </footer>
+    </div>
+
+    <script>
+        // --- Accordion Logic ---
+        const accordionBtns = document.querySelectorAll(".accordion-button");
+        accordionBtns.forEach(button => {
+            button.addEventListener("click", () => {
+                const isActive = button.classList.contains("active");
+                accordionBtns.forEach(btn => {
+                    btn.classList.remove("active");
+                    btn.nextElementSibling.style.maxHeight = "0";
+                });
+                if (!isActive) {
+                    button.classList.add("active");
+                    const content = button.nextElementSibling;
+                    content.style.maxHeight = content.scrollHeight + "px";
+                }
+            });
+        });
+
+        // --- Game Logic ---
+        const gameControls = document.getElementById('game-controls');
+        const startButton = document.getElementById('start-btn');
+        const gameContainer = document.getElementById('game');
+        const questionElement = document.getElementById('question');
+        const choiceElements = Array.from(document.getElementsByClassName('choice-text'));
+        const scoreText = document.getElementById('score');
+        const timerText = document.getElementById('timer');
+        const endScreen = document.getElementById('end-screen');
+        const finalScoreText = document.getElementById('final-score');
+        const restartButton = document.getElementById('restart-btn');
+        const progressText = document.getElementById('progress-text');
+
+        let currentQuestion = {};
+        let acceptingAnswers = false;
+        let score = 0;
+        let questionCounter = 0;
+        let availableQuestions = [];
+        let timer;
+        let timeLeft;
+        
+        let questions = [
+            // Identity & Governance
+            { question: "You need to ensure a web app named `webapp1` can securely access a key vault named `vault1` without storing credentials in the code. What should you configure?", choice1: "A managed identity for webapp1", choice2: "A Shared Access Signature (SAS) for vault1", choice3: "An Application Proxy for webapp1", choice4: "A service principal with a client secret", answer: 1 },
+            { question: "Your company wants to prevent the creation of expensive G-series VMs in a specific resource group. What is the most effective way to enforce this rule?", choice1: "Use Azure Advisor recommendations", choice2: "Apply a resource lock on the resource group", choice3: "Assign an Azure Policy with a 'Deny' effect", choice4: "Configure a budget alert in Cost Management", answer: 3 },
+            { question: "A new administrator joins your team and needs permissions to manage access to all resources within a subscription, but not the resources themselves. Which built-in role should you assign?", choice1: "Owner", choice2: "Contributor", choice3: "Reader", choice4: "User Access Administrator", answer: 4 },
+            { question: "You need to prevent the accidental deletion of a critical production storage account. What should you configure on the resource?", choice1: "An Azure Policy", choice2: "A ReadOnly resource lock", choice3: "A CanNotDelete resource lock", choice4: "An RBAC deny assignment", answer: 3 },
+            
+            // Storage
+            { question: "Which Azure service is best for correlating events from multiple resources into a centralized repository for analysis and visualization?", choice1: "Azure Event Hubs", choice2: "Azure Analysis Services", choice3: "Azure Monitor (Log Analytics)", choice4: "Azure Stream Analytics", answer: 3 },
+            { question: "You need to store 5 TB of rarely accessed data in the most cost-effective way possible. Retrieval time can be up to several hours. Which storage access tier should you use?", choice1: "Hot", choice2: "Premium", choice3: "Cool", choice4: "Archive", answer: 4 },
+            { question: "You need to provide shared file storage for several on-premises Windows servers and Azure VMs using the SMB 3.0 protocol. Which Azure Storage service should you use?", choice1: "Azure Blob Storage", choice2: "Azure Disk Storage", choice3: "Azure Files", choice4: "Azure Table Storage", answer: 3 },
+            { question: "What is the key benefit of using zone-redundant storage (ZRS)?", choice1: "It is the cheapest redundancy option", choice2: "It protects against a region-wide outage", choice3: "It replicates data synchronously across three availability zones in a region", choice4: "It allows read-access from a secondary region", answer: 3 },
+            
+            // Compute
+            { question: "You are deploying a set of identical virtual machines that will host a stateless web application. You need the ability to automatically increase or decrease the number of VMs based on CPU load. Which service should you use?", choice1: "Availability Zones", choice2: "Availability Set", choice3: "Virtual Machine Scale Sets (VMSS)", choice4: "Azure Site Recovery", answer: 3 },
+            { question: "What is the purpose of using deployment slots in Azure App Service?", choice1: "To increase the memory of the web app", choice2: "To back up the web app's content", choice3: "To deploy and test new app versions with no downtime before swapping to production", choice4: "To connect the web app to a virtual network", answer: 3 },
+            { question: "You have an ARM template that deploys a virtual machine. You need to run a PowerShell script to configure IIS on the VM after it is provisioned. What should you use?", choice1: "An Azure Policy", choice2: "The Custom Script Extension", choice3: "A deployment slot", choice4: "Azure Bastion", answer: 2 },
+            
+            // Networking
+            { question: "What is the primary function of a Network Security Group (NSG)?", choice1: "To route traffic between subnets", choice2: "To filter inbound and outbound network traffic to and from Azure resources", choice3: "To provide a dedicated private connection to Azure", choice4: "To load balance traffic across multiple VMs", answer: 2 },
+            { question: "To distribute web traffic across multiple virtual machines, which service provides layer 7 capabilities like SSL offloading and URL-based routing?", choice1: "Azure Load Balancer (Standard)", choice2: "Azure Firewall", choice3: "Azure Application Gateway", choice4: "Azure Traffic Manager", answer: 3 },
+            { question: "You need to provide secure, browser-based RDP and SSH access to your Azure VMs without exposing management ports to the internet. Which service should you deploy?", choice1: "VPN Gateway", choice2: "Azure Bastion", choice3: "ExpressRoute", choice4: "A public IP on each VM", answer: 2 },
+            { question: "You have two virtual networks, VNetA and VNetB, in the same Azure region. You need to enable resources in both VNETs to communicate with each other with low latency. What is the most direct and cost-effective solution?", choice1: "Configure a VNet-to-VNet VPN gateway", choice2: "Configure VNet Peering", choice3: "Deploy an ExpressRoute circuit", choice4: "Deploy a NAT Gateway", answer: 2 },
+
+            // Monitoring & Maintenance
+            { question: "You want to be notified by email whenever the average CPU percentage of a VM exceeds 90% for 5 minutes. What should you configure in Azure Monitor?", choice1: "A Log Analytics query", choice2: "A VM insight", choice3: "A metric alert rule", choice4: "A data collection rule", answer: 3 },
+            { question: "Which tool allows you to visually manage files and blobs in your Azure Storage Accounts from your Windows, macOS, or Linux desktop?", choice1: "Azure CLI", choice2: "Azure Portal", choice3: "Azure PowerShell", choice4: "Azure Storage Explorer", answer: 4 },
+            { question: "You are responsible for the business continuity of a critical VM. You need to ensure the VM can be failed over to another Azure region in case of a regional outage. Which service should you use?", choice1: "Azure Backup", choice2: "An Availability Set", choice3: "Azure Site Recovery", choice4: "An Availability Zone", answer: 3 }
+        ];
+
+        const SCORE_POINTS = 10;
+        const MAX_QUESTIONS = questions.length;
+        const EXAM_DURATION = 300; // 5 minutes for the expanded quiz
+
+        startGame = () => {
+            questionCounter = 0;
+            score = 0;
+            availableQuestions = [...questions];
+            scoreText.innerText = score;
+            timeLeft = EXAM_DURATION;
+            timerText.innerText = timeLeft;
+            gameContainer.style.display = 'block';
+            gameControls.style.display = 'none';
+            endScreen.style.display = 'none';
+            getNewQuestion();
+            clearInterval(timer); // Clear any existing timer
+            startTimer();
+        };
+
+        startTimer = () => {
+            timer = setInterval(() => {
+                timeLeft--;
+                timerText.innerText = timeLeft;
+                if (timeLeft <= 0) {
+                    clearInterval(timer);
+                    showEndScreen();
+                }
+            }, 1000);
+        };
+
+        getNewQuestion = () => {
+            if (availableQuestions.length === 0 || questionCounter >= MAX_QUESTIONS) {
+                clearInterval(timer);
+                showEndScreen();
+                return;
+            }
+
+            questionCounter++;
+            progressText.innerText = `${questionCounter}/${MAX_QUESTIONS}`;
+            const questionIndex = Math.floor(Math.random() * availableQuestions.length);
+            currentQuestion = availableQuestions[questionIndex];
+            questionElement.innerText = currentQuestion.question;
+
+            choiceElements.forEach(choice => {
+                const number = choice.dataset['number'];
+                choice.innerText = currentQuestion['choice' + number];
+            });
+
+            availableQuestions.splice(questionIndex, 1);
+            acceptingAnswers = true;
+        };
+
+        choiceElements.forEach(choice => {
+            choice.addEventListener('click', e => {
+                if (!acceptingAnswers) return;
+
+                acceptingAnswers = false;
+                const selectedChoice = e.target.closest('.choice-text');
+                const selectedAnswer = selectedChoice.dataset['number'];
+
+                const classToApply = selectedAnswer == currentQuestion.answer ? 'correct' : 'incorrect';
+
+                if (classToApply === 'correct') {
+                    incrementScore(SCORE_POINTS);
+                }
+
+                selectedChoice.parentElement.classList.add(classToApply);
+
+                setTimeout(() => {
+                    selectedChoice.parentElement.classList.remove(classToApply);
+                    getNewQuestion();
+                }, 1200);
+            });
+        });
+
+        incrementScore = num => {
+            score += num;
+            scoreText.innerText = score;
+        };
+
+        showEndScreen = () => {
+            gameContainer.style.display = 'none';
+            endScreen.style.display = 'block';
+            const percentage = (score / (MAX_QUESTIONS * SCORE_POINTS)) * 100;
+            finalScoreText.innerText = `${score} (${percentage.toFixed(0)}%)`;
+        };
+
+        startButton.addEventListener('click', startGame);
+        restartButton.addEventListener('click', () => {
+            endScreen.style.display = 'none';
+            gameControls.style.display = 'block';
+        });
+
+    </script>
+
+</body>
+</html>
